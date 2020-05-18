@@ -23,11 +23,11 @@ the following examples
 
 Image resizes in webbrowser:
 
-![Image resized in webbrowser](images/diagram_examples/multichart_view_de-print.png =700x)
+<img src="./example/images/diagram_examples/multichart_view_de-print.png" alt="drawing" width="700"/>
 
 Image resized manually in graphics software:
 
-![Image resized manually](images/diagram_examples/multichart_view_de.png)
+![Image resized manually](./example/images/diagram_examples/multichart_view_de.png)
 
 
 
