@@ -1,0 +1,14 @@
+:imagesdir: ../images
+# Image includes in other file
+
+Image file reference to be replaced (includes relative path)
+
+image::diagram_examples/multichart_view_de.png[pdfwidth=16cm]
+
+Another image file, not to be replaced
+
+image::create_chart_add_directories.png[pdfwidth=8cm]
+
+
+Now some image include image:diagram_examples/TableView_32x32.png[pdfwidth=1cm] inside a flowing text. And another one image:diagram_examples/TableView_32x32.png inside a flowing text in the _same_ line.
+

@@ -74,7 +74,7 @@ Now you run the script:
 
 ```bash
 # put all adoc files in current directory into 'pdf' mode
-> python adoc-image-prep pdf .
+> python adoc-image-prep.py pdf .
 ```
 
 and the image reference will have changed to
@@ -85,7 +85,7 @@ Now you run the script again with:
 
 ```bash
 # put all adoc files in current directory into 'html' mode
-> python adoc-image-prep html .
+> python adoc-image-prep.py html .
 ```
 
 and the image reference will have changed again to
@@ -94,8 +94,14 @@ and the image reference will have changed again to
 
 so, basically this toggles in-place the file names to the image files.
 
-After each execution of `adoc-image-prep` you can run `asciidoctor` or `asciidoctor-pdf` as usual.
+After each execution of `adoc-image-prep.py` you can run `asciidoctor` or `asciidoctor-pdf` as usual.
 
+#### Generating html and pdf output example
+
+See directory `example`, it contains two adoc-files with image references, a subdirectory with image files and a bash script `build.sh`.
+Run this script to generate first html output and afterwards pdf output, hereby using different image files for each generation process.
+
+Take a look at the `build.sh` script to see how the python script is called.
 
 ## Installation/tool chain setup for Asciidoctor
 
