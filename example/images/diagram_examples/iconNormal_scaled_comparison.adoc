@@ -1,0 +1,9 @@
+Icon in normal scaling
+
+image::TableView_32x32.png[pdfwidth=1cm]
+
+Icon in 4x scaling yet same print size
+
+image::TableView_32x32-print.png[pdfwidth=1cm]
+
+
