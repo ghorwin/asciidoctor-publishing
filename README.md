@@ -34,14 +34,14 @@ Obviously, the quality is better in the second variant. However, for the PDF out
 Also, for certain screenshots you may want to have crisp pixel-clear images in printed PDFs. Think of printing a 1000px screenshot on a 1200 dpi printer. Here, the image resolution won't be enough so 
 the image is smoothened out. In order to get pixel shown in print output as well, you need to insert a scaled image, yet scaled without interpolating pixels but just enlarging those.
 
-You can achieve this effect, for example, in any graphics software like Gimp (scale, Interpolation: __None__). The result becomes visible when reading the PDF, on-screen and printed:
+You can achieve this effect, for example, in any graphics software like Gimp (scale, Interpolation: _None_). The result becomes visible when reading the PDF, on-screen and printed:
 
 ![PDF image comparison](./example/images/diagram_examples/icon_pdf_scale_comparison.png)
 
 Generated PDF: [iconNormal_scaled_comparison.pdf](./example/images/diagram_examples/iconNormal_scaled_comparison.pdf)
 
 
-*Bottom line*: You may need two different image files, one for html and one for PDF output. But obviously, you do not want to write two versions of your (possibly large) adoc files, right?
+**Bottom line**: You may need two different image files, one for html and one for PDF output. But obviously, you do not want to write two versions of your (possibly large) adoc files, right?
 
 ### Script functionality
 
@@ -49,15 +49,18 @@ The Python-script in this repository (see subdirectory scripts) does the followi
 
 - scan all adoc files (in the directory passed as argument) for `image::` tags
 - extract file names and look up file names (either by absolute path or relative to the path given in `:imagesdir:` property)
-- if the referenced file is missing, it prints out a detailed error message that helps to track down the error in format:
+- if the referenced file is missing, it prints out a detailed error message that helps to track down the error:
 
 ```
+    # error line syntax
     <adocfile.adoc>:<line>: image file <path/to/image.png> (</full/path/to/image/file>) not found/accessible
+    # example
+    main.adoc:137: image file 'diagram_examples/multichart_view_de-print.png' ('./examples/images/diagram_examples/multichart_view_de-print.png') not found/accessible
 ```
+
 The second path in paranthesis is the actual search path, including the resolved `:imagesdir:` property.
 
-- then, if the file was found, it looks if a file with `-print` suffix is found besides the referenced image file; 
-- if the referenced file contains a `-print` suffix, it looks for the file variant without suffix
+- then, if the file was found, it looks if a file with `-print` suffix is found besides the referenced image file; if the referenced file contains a `-print` suffix, it looks for the file variant without suffix
 - depending on the generation mode (argument to the python script), it now replaces the file reference with the respective version with or without `-print` suffix
 
 
@@ -89,11 +92,14 @@ and the image reference will have changed again to
 
 `image::foo.png[pdfwidth=8cm]`
 
+so, basically this toggles in-place the file names to the image files.
 
 After each execution of `adoc-image-prep` you can run `asciidoctor` or `asciidoctor-pdf` as usual.
 
 
-## Installation/tool chain setup
+## Installation/tool chain setup for Asciidoctor
+
+This is just a note-to-self, may work for you as well. Otherwise see the asciidoctor webpage for infos.
 
 ### Linux/Ubuntu
 
