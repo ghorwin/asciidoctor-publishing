@@ -9,6 +9,9 @@ Another image file, not to be replaced
 
 image::create_chart_add_directories.png[pdfwidth=8cm]
 
+yet another image file, to be replaced but without trailing []
+
+image::diagram_examples/multichart_view_de.png
 
 Now some image include image:diagram_examples/TableView_32x32.png[pdfwidth=1cm] inside a flowing text. And another one image:diagram_examples/TableView_32x32.png inside a flowing text in the _same_ line.
 
