@@ -1,0 +1,21 @@
+:imagesdir: ../images
+
+
+[[first_header]]
+# Some top level section header
+
+
+[[second_header]]
+## Some second level section header
+
+
+[[2D_section]]
+## Some invalid link label section header
+
+In this text we refer to section <<first_header>>, where you can read all about section <<second_header, Some second header>>.
+Also, there might be a <<third_header, third section>>, that is actually still missing.
+
+Finally, we got a link back to the <<main, main topic>> and a link to <<image_ref, an image>>.
+
+
+

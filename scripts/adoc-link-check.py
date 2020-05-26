@@ -8,8 +8,11 @@
 #
 # AsciiDoc syntax expectations:
 #
-# [[link]] always start at begin of line and line contains nothing but link
-# <<link,title>> is parsed wherever found, even in source code blocks.
+# - [[link]] always start at begin of line and line contains nothing but link
+# - [[link]] may be followed in next line by header section, i.e. # on start of next line, 
+#            header title is used for annotating the label
+# - [[link]] may be followed a title .xxx in next line, title is used for annotating the label 
+# - <<link,title>> and <<link>> is parsed wherever found, even in source code blocks.
 #
 # Warnings are issued when:
 # - link is not found
@@ -20,10 +23,46 @@ import glob
 import sys
 import ntpath
 
-def processAdoc(fpath, mode, scriptPath):
+def haveDuplicateLinkLabel(label, links):
+	"""Checks if given label exists already in list of link labels.
+	
+	**Arguments**
+	
+	*label*
+	  the label to search for
+	  
+	*links*
+	  list with link labels collected so far, list contains tuples of (label, filename, line nr.)
+
+	**Returns**
+	
+	True, if such a label exists already in the list, False if not.
+	"""
+	
+	for l in links:
+		if l[0] == label:
+			print("    Duplicate label '{}' found at {}:{}".format(label, l[1], l[2]))
+			return True
+	
+	return False
+
+
+
+def scanForLinkLabels(fpath, links):
+	"""Processes asciidoctor input file:
+	
+	**Arguments**
+	
+	*fpath*
+	  full file path to Ascii-Doctor input file
+	  
+	*links*
+	  list with link labels collected so far (will be modified in function), list contains tuples of (label, filename, line nr.)
+	"""
+	
 	try:
 		adocDirPath, adocFName = ntpath.split(fpath)
-		print("\nProcessing '{}' in '{}'".format(adocFName, adocDirPath))
+		print("\n  {}".format(adocFName))
 		
 		# read the file
 		fobj = open(fpath, 'r')
@@ -31,94 +70,44 @@ def processAdoc(fpath, mode, scriptPath):
 		fobj.close
 		del fobj
 		
-		imagesdir = ""
-		# now process line by line, search for :imagesdir: property
+		# now process line by line, search for [[xxx]] pattern
 		for i in range(len(lines)):
 			line = lines[i]
-			pos = line.find(":imagesdir:")
-			if pos != -1:
-				imagesdir = line[11:].strip()
-				imagesdir = os.path.abspath(os.path.join(adocDirPath, imagesdir))
-				print ("  Images dir = '{}'".format(imagesdir))
-				continue
-			# search for image: or image:: in text
-			pos = line.find("image:")
-			while (pos != -1):
-				if len(line) > pos+2:
-					if line[pos+6] == ':':
-						pos = pos + 7
-					else:
-						pos = pos + 6
-				# search for first delimiter, either [ or ' '
-				pos_braket = line.find("[", pos)
-				pos_space = line.find(" ", pos)
-				pos2 = pos_braket
-				if pos_space != -1:
-					if pos2 != -1:
-						if pos_space < pos_braket:
-							pos2 = pos_space
-					else:
-						pos2 = pos_space
-				# pos2 now either holds the position of the first space, first '[' or -1 (end of line)
-				imagefname = line[pos:pos2].strip()
-				print("  Image ref = {}".format(imagefname))
-				
-				# check for existing file
-				if len(imagesdir) != 0:
-					fullImagePath = os.path.join(imagesdir, imagefname)
-				else:
-					fullImagePath = os.path.join(adocDirPath, imagefname)
-				if not os.path.exists(fullImagePath):
-					raise RuntimeError("{}:{}:Image file {} ({}) not found".format(adocFName, i+1, imagefname, fullImagePath))
-
-				# now we check for -print suffix 
-				(basename,ext) = os.path.splitext(imagefname)
-				posPrint = basename.rfind(PRINT_FILE_SUFFIX)
-				# do we have a filename without 
-				if posPrint == -1:
-					htmlName = basename + ext
-					pdfName = basename + PRINT_FILE_SUFFIX + ext
-				else:
-					htmlName = basename[:-len(PRINT_FILE_SUFFIX)] + ext
-					pdfName = basename + ext
-				
-				# based on mode, determine target filename
-				if mode == "html":
-					targetFile = htmlName
-				else:
-					targetFile = pdfName
-				# check if it exists
-				if len(imagesdir) != 0:
-					fullTargetPath = os.path.join(imagesdir, targetFile)
-				else:
-					fullTargetPath = os.path.join(adocDirPath, targetFile)
-				if not os.path.exists(fullTargetPath):
-					print("  WARNING: Target file {} not found, keeping original file name".format(targetFile))
-					targetFile = imagefname
-				# now replace filenames
-				line = line[0:pos] + targetFile + line[pos2:]
+			pos = line.find("[[")
+			# does line start with [[ ?
+			if pos == 0: 
+				pos2 = line.find("]]",3)
+				if pos2 != -1:
+					# found new link label
+					link_label = line[2:pos2]
+					# check if following line contains a caption
 					
-				pos = line.find("image:", pos2)
-			# while loop end
+					
+					# check if such label exists already somewhere
+					if not haveDuplicateLinkLabel(link_label, links):
+						links.append( (link_label, adocFName, i) )
+					else:
+						print("    and {}:{}".format(adocFName, i))
+						
 			
-			# store (potentially) modified line object
-			lines[i] = line
-			
-		# for loop end
-		
-		
-		# finally dump out the file again
-		fobj = open(fpath, 'w')
-		fobj.writelines(lines)
-		fobj.close()
-		del fobj
-		
 		
 	except IOError as e:
 		print(str(e))
 		raise RuntimeError("Error processing adoc file.")
 
 
+def checkReferences(fpath, links):
+	"""Processes asciidoctor input file:
+	
+	**Arguments**
+	
+	*fpath*
+	  full file path to Ascii-Doctor input file
+	  
+	*links*
+	  list with link labels collected so far
+	"""
+	pass
 
 # --- Main program start ---
 
@@ -135,12 +124,18 @@ try:
 		raise RuntimeError("Invalid command line, expected path argument.")
 
 	adocdir = sys.argv[1]
-	print("Processing '{}' in '{}' mode.".format(adocdir, mode))
+	print("Processing '{}'.".format(adocdir))
 	
-	# process all adoc files
+	# process all adoc files - first pass, scan for [[xxx]] link labels
+	links = []
 	for f in glob.glob(adocdir+"/*.adoc"):
 		fullPath = os.path.abspath(f)
-		processAdoc(fullPath, mode, scriptFilePath)
+		scanForLinkLabels(fullPath, links)
+		
+	# process all adoc files - second pass, scan for <<xxx>> references and print errors if encountered
+	for f in glob.glob(adocdir+"/*.adoc"):
+		fullPath = os.path.abspath(f)
+		checkReferences(fullPath, links)
 	
 except RuntimeError as e:
 	print(str(e))

@@ -16,18 +16,23 @@ v1.0.0, Mai 2020
 :stylesdir: ./css
 :stylesheet: roboto_ubuntu.css
 
+[[main]]
 ## This is an example on the usage of `adoc-image-prep.py`
 
 Image file reference to be replaced (includes relative path)
 
+[[image_ref]]
 image::diagram_examples/multichart_view_de.png[pdfwidth=16cm]
 
 Another image file, not to be replaced
 
+[[image_ref]]
+.An image with caption
 image::create_chart_add_directories.png[pdfwidth=8cm]
 
 
-// sub-document
+// sub-documents
 include::intro.adoc[leveloffset=+1]
+include::link.adoc[leveloffset=+1]
 
 
