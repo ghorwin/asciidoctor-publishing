@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# This file is part of asciidoctor-publishing git repo.
+# Written by Andreas Nicolai <andreas.nicolai -at- gmx[dot]net>.
+#
 # Image exchange tool to assist with asciidoctor publishing
 #
 # Syntax: adoc-image-prep.py <html|pdf> <path/to/adoc/files>
