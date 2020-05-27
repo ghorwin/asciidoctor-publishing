@@ -111,18 +111,18 @@ Take a look at the `build.sh` script to see how the python script is called.
 
 ### Link/Cross-Referencing help
 
-When you use cross-referencing, e.g. place `[[link_label]]` in your adco files somewhere and later refer to it with a link `<<link_label, section xxx>>`, you often have to deal with a couple of issues:
+When you use cross-referencing, e.g. place `[[link_label]]` in your adoc files somewhere and later refer to it with a link `<<link_label, section xxx>>`, you often have to deal with a couple of issues:
 
 1. Which labels did I place in my many files and what were the names exactly?
 2. Did I spell that label correctly, and if not, where in the text was the bad cross-reference?
 3. Did I use a correct link label name?
 4. Did I accidentally use the same link label name twice?
 
-Especially (2) is tricky - if you simply mispell a link label, the generated text will contain a link/URL as desired, but clicking on it does nothing. Also, (4) is pretty bad - you may think everything is find, but when you actually click on the click you jump off to some different place in the text.
+Especially (2) is tricky - if you simply mispell a link label, the generated text will contain a link/URL as desired, but clicking on it does nothing. Also, (4) is pretty bad - you may think everything is find, but when you actually click on the link you jump off to some different/unwanted place in the text.
 
 Here, you can use the script `adoc-link-check.py`. It scans a directory for all `adoc` files and does two things:
 
-- get a print a list of all link labels found in the texts with their locations and section titles/image file paths etc. found on the following line of the label
+- print a list of all link labels found in the texts with their locations and section titles/image file paths etc. found on the following line of the label
 - print out errors in case if duplicates or malformed/empty link labels
 - prints out errors of missing/misspelled cross-references with their locations
 
