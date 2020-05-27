@@ -20,12 +20,14 @@ import glob
 import sys
 import ntpath
 
+from print_funcs import *
+
 PRINT_FILE_SUFFIX = "-print"
 
 def processAdoc(fpath, mode, scriptPath):
 	try:
 		adocDirPath, adocFName = ntpath.split(fpath)
-		print("\nProcessing '{}' in '{}'".format(adocFName, adocDirPath))
+		print("\n  Processing '{}'".format(adocFName))
 		
 		# read the file
 		fobj = open(fpath, 'r')
@@ -41,7 +43,7 @@ def processAdoc(fpath, mode, scriptPath):
 			if pos != -1:
 				imagesdir = line[11:].strip()
 				imagesdir = os.path.abspath(os.path.join(adocDirPath, imagesdir))
-				print ("  Images dir = '{}'".format(imagesdir))
+				print ("    Images dir = '{}'".format(imagesdir))
 				continue
 			# search for image: or image:: in text
 			pos = line.find("image:")
@@ -63,7 +65,7 @@ def processAdoc(fpath, mode, scriptPath):
 						pos2 = pos_space
 				# pos2 now either holds the position of the first space, first '[' or -1 (end of line)
 				imagefname = line[pos:pos2].strip()
-				print("  Image ref = {}".format(imagefname))
+				print("    Image ref = {}".format(imagefname))
 				
 				# check for existing file
 				if len(imagesdir) != 0:
@@ -71,7 +73,7 @@ def processAdoc(fpath, mode, scriptPath):
 				else:
 					fullImagePath = os.path.join(adocDirPath, imagefname)
 				if not os.path.exists(fullImagePath):
-					raise RuntimeError("{}:{}:Image file {} ({}) not found".format(adocFName, i+1, imagefname, fullImagePath))
+					raise RuntimeError("    ERROR: {}:{}:Image file {} ({}) not found".format(adocFName, i+1, imagefname, fullImagePath))
 
 				# now we check for -print suffix 
 				(basename,ext) = os.path.splitext(imagefname)
@@ -95,7 +97,7 @@ def processAdoc(fpath, mode, scriptPath):
 				else:
 					fullTargetPath = os.path.join(adocDirPath, targetFile)
 				if not os.path.exists(fullTargetPath):
-					print("  WARNING: Target file {} not found, keeping original file name".format(targetFile))
+					printWarning("    WARNING: Target file {} not found, keeping original file name".format(targetFile))
 					targetFile = imagefname
 				# now replace filenames
 				line = line[0:pos] + targetFile + line[pos2:]
@@ -117,7 +119,7 @@ def processAdoc(fpath, mode, scriptPath):
 		
 		
 	except IOError as e:
-		print(str(e))
+		printError(str(e))
 		raise RuntimeError("Error processing adoc file.")
 
 
@@ -146,7 +148,7 @@ try:
 		processAdoc(fullPath, mode, scriptFilePath)
 	
 except RuntimeError as e:
-	print(str(e))
+	printError(str(e))
 	exit(1)
 
 exit(0)
