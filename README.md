@@ -133,6 +133,25 @@ Example:
 > python adoc-link-check.py .
 ```
 
+When you run the example script `linkcheck.sh` in the `example` subdir, you will get an output like:
+
+```
+Scanning for link-labels in adoc files of '.':
+    Duplicate label 'image_ref' found at main.adoc:24 and main.adoc:28
+
+List of labels:
+  2D_section           link.adoc:12                   '## Some invalid link label section header' : must not start with digit
+  first_header         link.adoc:4                    '# Some top level section header'
+  image_ref            main.adoc:24                   ''
+  image_ref            main.adoc:29                   'An image with caption' : duplicate
+  main                 main.adoc:19                   '## This is an example on the usage of `adoc-image-prep.py`'
+  second_header        link.adoc:8                    '## Some second level section header'
+
+Invalid/problematic cross-references:
+  third_header         link.adoc:16                  
+```
+
+The problematic link labels/cross-reference lines are normally written in red for easy spotting. Also, in the _List of labels_ section, all labels with problems have a : at the end with an appended error message.
 
 ## Installation/tool chain setup for Asciidoctor
 
