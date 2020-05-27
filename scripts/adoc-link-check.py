@@ -17,6 +17,9 @@
 # - [[link]] may be followed a title .xxx in next line, title is used for annotating the label 
 # - <<link,title>> and <<link>> is parsed wherever found, even in source code blocks.
 #
+# - image link labels are recognized by "image::" on next line after link label
+# - table link labels are recognized by "[width=" on next line after link label
+# 
 # Warnings are issued when:
 # - link is not found
 # - link starts with number (invalid)
@@ -88,7 +91,7 @@ def scanForLinkLabels(fpath, links):
 						printError("    empty label at {}:{}".format(adocFName, i+1)) # Mind: human-user line numbering starts with 1
 						continue
 					desc = ""
-					if i < len(lines):
+					if i+1 < len(lines):
 						nextLine = lines[i+1]
 						if len(nextLine) != 0:
 							# check if following line contains a caption
@@ -97,6 +100,13 @@ def scanForLinkLabels(fpath, links):
 							# check if following line contains a caption
 							elif nextLine[0] == ".":
 								desc = nextLine[1:].strip()
+								# further determine if the next line contains a table or image, and add a suffix to clarify type of reference
+								if i+2 < len(lines):
+									overnextLine = lines[i+2]
+									if overnextLine.find("image::") == 0:
+										desc = "image:" + desc
+									elif overnextLine.find("[width=") == 0:
+										desc = "table:" + desc
 							elif nextLine.find("image::"):
 								desc = nextLine[8:].strip()
 					# check if such label exists already somewhere
@@ -153,7 +163,7 @@ def checkReferences(fpath, links):
 						# try to find the cross ref label in link list
 						if findLinkLabel(crossRefLabel, links) == None:
 							loc = "{}:{}".format(adocFName, i+1)
-							printError("  {:<20s} {:<30s}".format(crossRefLabel, loc))
+							printError("  {:<30s} {:<30s}".format(crossRefLabel, loc))
 				pos = line.find("<<", pos+2)
 
 	except IOError as e:
@@ -200,9 +210,9 @@ try:
 		elif l[4]:
 			badLabelError = "duplicate"
 		if len(badLabelError) != 0:
-			printError("  {:<20s} {:<30s} '{}' : {}".format(l[0], loc, l[3], badLabelError) )
+			printError("  {:<30s} {:<30s} '{}' : {}".format(l[0], loc, l[3], badLabelError) )
 		else:
-			print("  {:<20s} {:<30s} '{}'".format(l[0], loc, l[3]) )
+			print("  {:<30s} {:<30s} '{}'".format(l[0], loc, l[3]) )
 	
 	print("\nInvalid/problematic cross-references:")
 	# process all adoc files - second pass, scan for <<xxx>> references and print errors if encountered
