@@ -35,12 +35,12 @@ Image after being manually resized in graphics software:
 
 ![Image resized manually](./example/images/diagram_examples/multichart_view_de.png)
 
-Obviously, the quality is better in the second variant. However, for the PDF output (with a much higher print resoultion and zoom-in feature), you would like to keep the original resolution.
+Obviously, the quality is better in the second variant. However, for the PDF output (with a much higher print resolution and zoom-in feature), you would like to keep the original resolution.
 
 Also, for certain screenshots you may want to have crisp pixel-clear images in printed PDFs. Think of printing a 1000px screenshot on a 1200 dpi printer. Here, the image resolution won't be enough so 
 the image is smoothened out. In order to get pixel shown in print output as well, you need to insert a scaled image, yet scaled without interpolating pixels but just enlarging those.
 
-You can achieve this effect, for example, in any graphics software like Gimp (scale, Interpolation: _None_). The result becomes visible when reading the PDF, on-screen and printed:
+You can achieve this effect, for example, in any graphics software like Gimp (scale, Interpolation: _None_), or with tools like `ImageMagick`. The result becomes visible when reading the PDF, on-screen and printed:
 
 ![PDF image comparison](./example/images/diagram_examples/icon_pdf_scale_comparison.png)
 
