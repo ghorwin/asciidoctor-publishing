@@ -153,6 +153,14 @@ Invalid/problematic cross-references:
 
 The problematic link labels/cross-reference lines are normally written in red for easy spotting. Also, in the _List of labels_ section, all labels with problems have a : at the end with an appended error message.
 
+### Use with AsciiDocFX
+
+When writing documents in AsciiDocFX, the embedded terminal can be used very efficiently together with linkcheck:
+
+![linkcheck_with_asciidocfx](./example_AsciiDocFX_with_linkcheck_in_terminal.png)
+
+Just open the embedded terminal and run the `./linkcheck.sh` script or corresponding batch file.
+
 ## Installation/tool chain setup for Asciidoctor
 
 This is just a note-to-self, may work for you as well. Otherwise see the asciidoctor webpage for infos.
